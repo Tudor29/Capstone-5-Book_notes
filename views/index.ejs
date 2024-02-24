@@ -1,9 +1,14 @@
 <%- include('partials/header.ejs') %>
 
 <div>
-    <h1>Book List App</h1>
+    <h1>Book Notes</h1>
 </div>
-
+<div>
+    <form action="/new" method="post">
+        <input type="text" name="book.title">
+        <button class="edit" type="submit">Search</button>
+    </form>
+</div>
 
 
 

@@ -22,11 +22,20 @@ const db = new pg.Client({
 });
 db.connect();
 
+async function fetchBooksByTitle(title) {
+  const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`;
 
-
-
-
-
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.docs;
+  } catch (error) {
+    console.error("Could not fetch books:", error);
+  }
+}
 
 
 
