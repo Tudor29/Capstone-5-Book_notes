@@ -23,20 +23,52 @@ const db = new pg.Client({
 db.connect();
 
 async function fetchBooksByTitle(title) {
-  const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`;
-
+  const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(
+    title
+  )}`;
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
+    const response = await axios.get(url);
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    return data.docs;
+    return response.data.docs;
   } catch (error) {
     console.error("Could not fetch books:", error);
   }
 }
 
+app.get("/", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM books");
+    const hasNotes = result.rows.length > 0;
+    res.render("index", { bookNotes: result.rows, hasNotes: hasNotes });
+  } catch (error) {
+    console.error("Database error:", error);
+    res.send("Error fetching book notes.");
+  }
+});
+
+app.get("/search", async (req, res) => {
+  if (!req.query.title) {
+    return res.json([]);
+  }
+  const books = await fetchBooksByTitle(req.query.title);
+  res.json(books);
+});
+
+app.post("/new", async (req, res) => {
+  const { title, author, note } = req.body;
+  try {
+    await db.query(
+      "INSERT INTO books (title, author, notes) VALUES ($1, $2, $3)",
+      [title, author, note]
+    );
+    res.redirect("/");
+  } catch (error) {
+    console.error("Database error:", error);
+    res.send("Error adding book note.");
+  }
+});
 
 
 

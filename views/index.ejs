@@ -1,20 +1,24 @@
 <%- include('partials/header.ejs') %>
 
-<div>
-    <h1>Book Notes</h1>
-</div>
-<div>
-    <form action="/new" method="post">
-        <input type="text" name="book.title">
-        <button class="edit" type="submit">Search</button>
-    </form>
-</div>
-
-
-
-
-
-
+<h1>Book Notes</h1>
+        <form action="/" method="get">
+            <input type="text" name="title" placeholder="Search for a book title">
+            <button type="submit">Search</button>
+        </form>
+        
+        <% if (hasNotes) { %>
+            <div>
+                <% bookNotes.forEach(note => { %>
+                    <div>
+                        <h2><%= note.title %></h2>
+                        <h5><%= note.author %></h5>
+                        <p><%= note.notes %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p>No book notes have been added yet.</p>
+        <% } %>
 
 
 <%- include('partials/footer.ejs') %>
