@@ -39,9 +39,9 @@ async function fetchBooksByTitle(title) {
 
 app.get("/", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM books");
-    const hasNotes = result.rows.length > 0;
-    res.render("index", { bookNotes: result.rows, hasNotes: hasNotes });
+    const { rows: bookNotes } = await db.query("SELECT * FROM books");
+    const hasNotes = bookNotes.length > 0;
+    res.render("index", { bookNotes: bookNotes, hasNotes: hasNotes });
   } catch (error) {
     console.error("Database error:", error);
     res.send("Error fetching book notes.");
@@ -53,19 +53,46 @@ app.get("/search", async (req, res) => {
     return res.json([]);
   }
   const books = await fetchBooksByTitle(req.query.title);
-  res.json(books.slice(0, 30));
+  res.json(books.slice(0, 10));
 });
 
-app.post("/new", async (req, res) => {
-  const { title, author, note } = req.body;
+app.get("/new", async (req, res) => {
+  const { title } = req.query;
+  let author = "Author not found";
+
+  if (title) {
+    try {
+      const apiUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(
+        title
+      )}`;
+      const response = await axios.get(apiUrl);
+      author =
+        response.data.docs[0]?.author_name?.join(", ") || "Author not found";
+    } catch (error) {
+      console.error("Error fetching author:", error);
+    }
+  }
+
+  res.render("new", { title: title, author: author });
+});
+
+app.post("/add-note", async (req, res) => {
+  const { title, notes, rating } = req.body;
   try {
+    const apiUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(
+      title
+    )}`;
+    const response = await axios.get(apiUrl);
+    const author =
+      response.data.docs[0]?.author_name?.join(", ") || "Author not found";
+
     await db.query(
-      "INSERT INTO books (title, author, notes) VALUES ($1, $2, $3)",
-      [title, author, note]
+      "INSERT INTO books (title, author, rating, notes) VALUES ($1, $2, $3, $4)",
+      [title, author, rating, notes]
     );
     res.redirect("/");
   } catch (error) {
-    console.error("Database error:", error);
+    console.error("Error adding book note:", error);
     res.send("Error adding book note.");
   }
 });
