@@ -53,7 +53,7 @@ app.get("/search", async (req, res) => {
     return res.json([]);
   }
   const books = await fetchBooksByTitle(req.query.title);
-  res.json(books);
+  res.json(books.slice(0, 30));
 });
 
 app.post("/new", async (req, res) => {
@@ -69,9 +69,6 @@ app.post("/new", async (req, res) => {
     res.send("Error adding book note.");
   }
 });
-
-
-
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
