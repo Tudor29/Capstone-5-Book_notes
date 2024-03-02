@@ -8,12 +8,19 @@ $(document).ready(function () {
         success: function (books) {
           const suggestionsList = $("#suggestionsList");
           suggestionsList.empty();
+
           books.forEach((book) => {
             const identifier = book.key || book.id;
             const li = $("<li>")
-            .html(`<strong>${book.title}</strong><br><span class='author-info'>by ${book.author_name.join(", ")}</span>`)
-            .data('key', book.key);
-            $('#suggestionsList').append(li);
+              .html(
+                `<strong>${
+                  book.title
+                }</strong><br><span class='author-info'>by ${book.author_name.join(
+                  ", "
+                )}</span>`
+              )
+              .data("identifier", identifier);
+            suggestionsList.append(li);
           });
         },
         error: function (error) {
@@ -24,8 +31,9 @@ $(document).ready(function () {
       $("#suggestionsList").empty();
     }
   });
+
   $(document).on("click", "#suggestionsList li", function () {
-    const bookTitle = $(this).text();
+    const bookTitle = $(this).find("strong").text();
     const identifier = $(this).data("identifier");
     window.location.href = `/new?title=${encodeURIComponent(
       bookTitle

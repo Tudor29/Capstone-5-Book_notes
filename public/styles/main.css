@@ -59,24 +59,114 @@
   height: 150px;
 }
 
-.star-rating {
-  font-size: 18px;
-}
-
 .update-button {
-  background-color: #4caf50; /* Green */
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 15px 32px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
 }
 
 footer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+}
+
+.book-details {
+  text-align: center;
+}
+
+.book-cover-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.star-rating {
+  color: gold;
+  font-size: 18px;
+}
+
+.star-rating .hollow {
+  color: #ddd;
+}
+
+.search-bar {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.book-notes-container,
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.book-note-card,
+.note-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.book-cover {
+  width: 100px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.note-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.note-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 150px;
+}
+
+.note-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.note-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.note-content::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.note-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media (max-width: 1024px) {
+  .book-notes-container,
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .book-notes-container,
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .book-cover {
+    width: 100px;
+  }
 }

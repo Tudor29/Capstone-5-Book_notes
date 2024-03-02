@@ -1,30 +1,49 @@
 <%- include('partials/header.ejs') %>
 
-<form action="/new" method="get">
-  <div class="search-container">
-    <input
-      type="text"
-      name="title"
-      id="bookSearch"
-      placeholder="Search for books..."
-    />
-    <ul id="suggestionsList"></ul>
+<div class="container">
+  <div class="search-bar">
+    <form action="/new" method="get" class="search-form">
+      <input
+        type="text"
+        name="title"
+        id="bookSearch"
+        placeholder="Search for books..."
+        autocomplete="off"
+      />
+      <button type="submit" class="search-button">Add Notes</button>
+    </form>
+    <ul id="suggestionsList" class="suggestions"></ul>
   </div>
-  <button type="submit">Add Notes</button>
-</form>
 
-<% if (hasNotes) { %>
-<div>
-  <% bookNotes.forEach(note => { %>
-  <div>
-    <h2><%= note.title %></h2>
-    <h5>By <%= note.author %></h5>
-    <h6>Review:</h6>
-    <p><%= note.notes %></p>
-    <p>Rating: <%= note.rating %>/5</p>
+  <div class="notes-grid">
+    <% if (hasNotes) { %> <% bookNotes.forEach(note => { %>
+    <div class="note-card">
+      <% if (note.coverImgUrl) { %>
+      <img
+        src="<%= note.coverImgUrl %>"
+        alt="Cover image of <%= note.title %>"
+        class="book-cover"
+      />
+      <% } %>
+      <div class="note-info">
+        <h2 class="note-title"><%= note.title %></h2>
+        <h3 class="note-author">By <%= note.author %></h3>
+        <div class="note-content">
+          <p class="note-text"><%= note.notes %></p>
+        </div>
+        <div class="star-rating">
+          <% for(let i = 1; i <= 5; i++) { %> <% if(i <= note.rating) { %>
+          <span class="filled-star">★</span>
+          <% } else { %>
+          <span class="hollow-star">☆</span>
+          <% } %> <% } %>
+        </div>
+      </div>
+    </div>
+    <% }) %> <% } else { %>
+    <p class="no-notes">No book notes have been added yet.</p>
+    <% } %>
   </div>
-  <% }) %>
+
+  <%- include('partials/footer.ejs') %>
 </div>
-<% } else { %>
-<p>No book notes have been added yet.</p>
-<% } %> <%- include('partials/footer.ejs') %>

@@ -1,16 +1,29 @@
 <%- include('partials/header.ejs') %>
 
 <div class="book-notes-form">
-  <h1><%= title %></h1>
-  <h2>By <%= author %></h2>
+  <div class="book-details">
+    <% if (coverImgUrl) { %>
+    <img
+      src="<%= coverImgUrl %>"
+      alt="Cover image of <%= title %>"
+      class="book-cover-image"
+    />
+    <% } %>
+    <h1><%= title %></h1>
+    <h2>By <%= author %></h2>
+  </div>
 
   <form action="/add-note" method="post">
-    <input type="hidden" id="title" name="title" value="<%= title %>"/>
-    <input type="hidden" id="author" name="author" value="<%= author %>"/>
+    <input type="hidden" id="title" name="title" value="<%= title %>" />
+    <input type="hidden" id="author" name="author" value="<%= author %>" />
 
     <div class="form-group">
-      <label for="notes">Edit Review:</label>
-      <textarea id="notes" name="notes" placeholder="Your notes about the book"></textarea>
+      <label for="notes">Edit Notes:</label>
+      <textarea
+        id="notes"
+        name="notes"
+        placeholder="Your notes about the book"
+      ></textarea>
     </div>
 
     <div class="form-group">
@@ -24,7 +37,7 @@
       </select>
     </div>
 
-    <button type="submit" class="update-button">Update</button>
+    <button type="submit" class="update-button">Add Note</button>
   </form>
 </div>
 
