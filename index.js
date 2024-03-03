@@ -39,9 +39,15 @@ async function fetchBooksByTitle(title) {
 
 app.get("/", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM books");
-    const hasNotes = result.rows.length > 0;
-    res.render("index", { bookNotes: result.rows, hasNotes: hasNotes });
+    let bookNotes = await db.query("SELECT * FROM books");
+    bookNotes = bookNotes.rows.map((note) => {
+      note.coverImgUrl = note.cover_img_id
+        ? `https://covers.openlibrary.org/b/id/${note.cover_img_id}-M.jpg`
+        : "";
+      return note;
+    });
+    const hasNotes = bookNotes.length > 0;
+    res.render("index", { bookNotes: bookNotes, hasNotes: hasNotes });
   } catch (error) {
     console.error("Database error:", error);
     res.send("Error fetching book notes.");
@@ -53,23 +59,53 @@ app.get("/search", async (req, res) => {
     return res.json([]);
   }
   const books = await fetchBooksByTitle(req.query.title);
-  res.json(books.slice(0, 30));
+  res.json(books.slice(0, 10));
 });
 
-app.get("/new", (req, res) => {
-  res.render("new", {title: req.query.title ||})
-})
+app.get("/new", async (req, res) => {
+  const { title } = req.query;
+  let author = "Author not found";
+  let coverImgUrl = "";
+  if (title) {
+    try {
+      const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(
+        title
+      )}`;
+      const searchResponse = await axios.get(searchUrl);
+      if (searchResponse.data.docs.length > 0) {
+        const firstDoc = searchResponse.data.docs[0];
+        author = firstDoc.author_name?.join(", ") || "Author not found";
 
-app.post("/new", async (req, res) => {
-  const { title, author, note } = req.body;
+        if (firstDoc.cover_i) {
+          coverImgUrl = `https://covers.openlibrary.org/b/id/${firstDoc.cover_i}-M.jpg`;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching author or cover image:", error);
+    }
+  }
+  res.render("new", { title: title, author: author, coverImgUrl: coverImgUrl });
+});
+
+app.post("/add-note", async (req, res) => {
+  const { title, notes, rating } = req.body;
   try {
+    const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(
+      title
+    )}`;
+    const searchResponse = await axios.get(searchUrl);
+    const coverImgId = searchResponse.data.docs[0]?.cover_i;
+    const author =
+      searchResponse.data.docs[0]?.author_name?.join(", ") ||
+      "Author not found";
+
     await db.query(
-      "INSERT INTO books (title, author, notes) VALUES ($1, $2, $3)",
-      [title, author, note]
+      "INSERT INTO books (title, author, rating, notes, cover_img_id) VALUES ($1, $2, $3, $4, $5)",
+      [title, author, rating, notes, coverImgId]
     );
     res.redirect("/");
   } catch (error) {
-    console.error("Database error:", error);
+    console.error("Error adding book note:", error);
     res.send("Error adding book note.");
   }
 });

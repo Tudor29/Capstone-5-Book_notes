@@ -13,12 +13,6 @@
     <h2>By <%= author %></h2>
   </div>
 
-  <form action="<%= editMode ? `/update-note/${id}` : '/add-note' %>" method="post">
-    <% if (editMode) { %>
-      <input type="hidden" name="id" value="<%= id %>" />
-    <% } %>
-  </form>
-  
   <form action="/add-note" method="post">
     <input type="hidden" id="title" name="title" value="<%= title %>" />
     <input type="hidden" id="author" name="author" value="<%= author %>" />
