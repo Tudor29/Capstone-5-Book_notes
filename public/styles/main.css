@@ -518,3 +518,16 @@ footer {
     width: 100px;
   }
 }
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #222831;
+}
+
+.title{
+  background-color: #00ADB5;
+}
+
+.note-card{
+  background-color: #EEEEEE;
+}
