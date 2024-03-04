@@ -1,0 +1,40 @@
+<%- include('partials/header.ejs') %>
+
+<div class="book-notes-form">
+  <div class="book-details">
+    <% if (coverImgUrl) { %>
+    <img
+      src="<%= coverImgUrl %>"
+      alt="Cover image of <%= title %>"
+      class="book-cover-image"
+    />
+    <% } %>
+    <h1><%= title %></h1>
+    <h2>By <%= author %></h2>
+  </div>
+
+  <form action="/update-note/<%= bood_id %>" method="post">
+    <input type="hidden" name="bood_id" value="<%= bood_id %>" />
+    <input type="hidden" name="title" value="<%= title %>" />
+    <input type="hidden" name="author" value="<%= author %>" />
+  
+    <div class="form-group">
+      <label for="notes">Edit Notes:</label>
+      <textarea id="notes" name="notes" placeholder="Your notes about the book"><%= notes %></textarea>
+    </div>
+  
+    <div class="form-group">
+      <label for="rating">Edit Rating:</label>
+      <select id="rating" name="rating" class="star-rating">
+        <% for (let i = 1; i <= 5; i++) { %>
+          <option value="<%= i %>" <%= rating == i ? 'selected' : '' %>><%= '★'.repeat(i) %></option>
+        <% } %>
+      </select>
+    </div>
+  
+    <button type="submit" class="update-button">Update Note</button>
+  </form>
+  
+</div>
+
+<%- include('partials/footer.ejs') %>

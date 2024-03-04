@@ -39,6 +39,17 @@
           <% } %> <% } %>
         </div>
       </div>
+
+      <div class="edit-delete-buttons">
+        <form action="/edit-note/<%= note.bood_id %>" method="get">
+          <button type="submit" class="edit-button">Edit</button>
+        </form>
+        <form action="/delete-note/<%= note.bood_id %>" method="post">
+          <button type="submit" class="delete-button">Delete</button>
+        </form>
+        
+      </div>
+
     </div>
     <% }) %> <% } else { %>
     <p class="no-notes">No book notes have been added yet.</p>
