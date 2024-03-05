@@ -10,7 +10,9 @@
         placeholder="Search for books..."
         autocomplete="off"
       />
-      <button type="submit" class="search-button btn btn-success">Add Notes</button>
+      <button type="submit" class="search-button btn btn-success">
+        Add Notes
+      </button>
     </form>
     <ul id="suggestionsList" class="suggestions"></ul>
   </div>
@@ -40,21 +42,27 @@
         </div>
       </div>
 
-      <div class="edit-delete-buttons">
-        <form action="/edit-note/<%= note.bood_id %>" method="get">
-          <button type="submit" class="edit-button btn btn-primary">Edit</button>
-        </form>
-        <form action="/delete-note/<%= note.bood_id %>" method="post">
-          <button type="submit" class="delete-button btn btn-danger">Delete</button>
-        </form>
-        
+      <div class="edit-delete-buttons row">
+        <div class="col-6">
+          <form action="/edit-note/<%= note.bood_id %>" method="get">
+            <button type="submit" class="edit-button btn btn-primary">
+              Edit
+            </button>
+          </form>
+        </div>
+        <div class="col-6">
+          <form action="/delete-note/<%= note.bood_id %>" method="post">
+            <button type="submit" class="delete-button btn btn-danger">
+              Delete
+            </button>
+          </form>
+        </div>
       </div>
-
     </div>
     <% }) %> <% } else { %>
     <p class="no-notes">No book notes have been added yet.</p>
     <% } %>
   </div>
-
-  <%- include('partials/footer.ejs') %>
 </div>
+
+<%- include('partials/footer.ejs') %>

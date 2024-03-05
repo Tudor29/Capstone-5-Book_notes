@@ -547,3 +547,12 @@ body {
 .title1 {
   padding-left: 5rem;
 }
+
+#bookSearch {
+  border-radius: 30px;
+  padding-left: 20px;
+}
+
+.search-button {
+  border-radius: 30px;
+}
